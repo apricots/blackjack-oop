@@ -2,28 +2,30 @@ class Card
 
   attr_accessor :suit, :value
 
+
   def initialize (suit, value)
     @suit = suit.to_s
     @value = value.to_s
   end
 
   def to_s
-    "[#{@value} of #{@suit}]"
+    "[#{value} of #{suit}]"
   end
 
 end
 #####################
-# DECK - intially an array of 52 cards
 class Deck
 
+  SUIT_NAMES = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
+  FACE_VALUES = ['A','2','3','4','5','6','7','8','9','10','J', 'Q', 'K']
   attr_accessor :array_of_cards
 
   #create a deck of cards. takes a number of decks parameter to use more than 52 cards.
   def initialize (num_of_decks)
     @array_of_cards = []
     num_of_decks.times do
-      ['Hearts', 'Diamonds', 'Clubs', 'Spades'].each do |suit|
-        ['A','2','3','4','5','6','7','8','9','10','J', 'Q', 'K'].each do |value|
+      SUIT_NAMES.each do |suit|
+        FACE_VALUES.each do |value|
           @array_of_cards.push(Card.new(suit,value))
         end
       end
@@ -51,6 +53,7 @@ end
 ############
 class Human
   attr_accessor :hand, :name
+  BLACKJACK = 21
 
   def initialize(name)
     @name = name
@@ -74,7 +77,7 @@ class Human
       #check if the card is "special"
       if card.value == "A"
         card_total += 11
-        if card_total > 21
+        if card_total > BLACKJACK
           card_total -= 10
         end
       elsif card.value.to_i == 0
@@ -83,12 +86,12 @@ class Human
         card_total += card.value.to_i
       end
     end
-    puts "#{@name}'s total is #{card_total}."
+    puts "#{name}'s total is #{card_total}."
 
-    if card_total == 21
+    if card_total == BLACKJACK
       puts "Blackjack! You win."
       exit
-    elsif card_total > 21
+    elsif card_total > BLACKJACK
       puts "You bust! Sorry, you lost."
       exit
     end
@@ -98,7 +101,7 @@ class Human
 
 
   def show_hand
-    puts "#{@name}'s cards are..."
+    puts "#{name}'s cards are..."
     puts @hand
     calculate_hand
   end
@@ -122,6 +125,7 @@ class Player < Human
 end
 
 class Dealer < Human
+
   def initialize(name)
     super
   end
@@ -145,12 +149,12 @@ class Dealer < Human
         card_total += card.value.to_i
       end
     end
-    puts "#{@name}'s total is #{card_total}."
+    puts "#{name}'s total is #{card_total}."
 
-    if card_total == 21
+    if card_total == BLACKJACK
       puts "Dealer got Blackjack. You lost :("
       exit
-    elsif card_total > 21
+    elsif card_total > BLACKJACK
       puts "Dealer bust. You win!"
       exit
     end
@@ -193,15 +197,15 @@ until total >= 17
   dealer.recieve_card(myDeck.give_card)
   total = dealer.show_hand
 end
-puts "Dealer's turn is over."
+puts "Dealer's turn is over. Let's do the final comparison!"
 player_final = player1.show_hand
 dealer_final = dealer.show_hand
 if player_final > dealer_final
-  puts "YOU WIN!"
+  puts "Yay, you won!"
 elsif dealer_final > player_final
-  puts "YOU LOST!"
+  puts "Sorry, you lost!"
 else 
-  puts "TIE!!!"
+  puts "It was a tie."
 end
 
 
